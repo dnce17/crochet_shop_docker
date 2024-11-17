@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Crochet Site</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/static/style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="/static/socket.js"></script>
+</head>
+<body>
+    <header>
+        <div class="ctnr navbar">
+            <div class="navbar__items">
+                <div class="nav__toggle">
+                    <img src="/static/img/hamburger-icon.png" class="nav__toggle-icon" alt="hamburger icon toggle button">
+                </div>
+                <a href="/" class="logo">
+                    <img src="/static/img/logo.png" class="logo__img" alt="ball of yarn with crochet stick">
+                </a>
+            </div>
+            <nav class="nav d-none">
+                <ul class="nav__list nav__list--left">
+                    <li class="nav__item"><a href="/" class="nav__link">Home</a></li>
+                    <li class="nav__item"><a href="/shop" class="nav__link">Shop</a></li>
+                </ul>
+                <ul class="nav__list nav__list--right">
+                    <li class="nav__item"><a href="/login" class="nav__link">Login</a></li>
+                    <li class="nav__item"><a href="/register" class="nav__link">Sign Up</a></li>
+                    <li class="nav__item"><a href="/request" class="nav__link">Request Order</a></li>
+                    <li class="nav__item"><a href="/order" class="nav__link">Check Orders</a></li>
+                    <li class="nav__item"><a href="/cart" class="nav__link">Cart(<span class="cart-amt">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>{% block main %}{% endblock %}</main>
+
+    <section class="footer">
+        <div class="ctnr">
+            <div class="footer__nav-ctnr">
+                <div class="footer__nav">
+                    <h4 class="footer__title">Customer Service</h4>
+                    <ul class="footer__list">
+                        <li class="footer__item"><a href="#" class="footer__link">Contact Us</a></li>
+                        <li class="footer__item"><a href="#" class="footer__link">Shop</a></li>
+                        <li class="footer__item"><a href="#" class="footer__link">Order Tracking</a></li>
+                        <li class="footer__item"><a href="#" class="footer__link">Terms & Condition</a></li>
+                    </ul>
+                </div>
+                <div class="footer__nav">
+                    <h4 class="footer__title">Social Media</h4>
+                    <ul class="footer__list">
+                        <li class="footer__item"><a href="#" class="footer__link">Twitter</a></li>
+                        <li class="footer__item"><a href="#" class="footer__link">Instagram</a></li>
+                        <li class="footer__item"><a href="#" class="footer__link">Tumblr</a></li>
+                        <li class="footer__item"><a href="#" class="footer__link">Pinterest</a></li>
+                    </ul>
+                </div>
+                <div class="footer__nav">
+                    <h4 class="footer__title">About</h4>
+                    <ul class="footer__list">
+                        <li class="footer__item"><a href="#" class="footer__link">About Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <h5 class="copyright">© 2024 Random Crochet Company, All Rights Reserved</h5>
+            <img src="/static/img/accepted-cards.png" class="credit-cards" alt="all credit cards accepted">
+        </div>
+    </section>
+
+    <script src="/static/index.js"></script>
+    {% block js %}{% endblock %}
+</body>

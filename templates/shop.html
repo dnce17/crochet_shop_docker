@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<main class="shop">
+    <div class="ctnr shop__display">
+        {% for item in items_on_pg %}
+            <article class="shop__item">
+                <img src="{{ item.directory }}{{ item.path }}" class="shop__img" alt="{{ item.alt }}">
+                <h4 class="shop__img-title">{{ item.name }}</h4>
+                <h4 class="shop__img-price">${{ item.price }}</h4>
+                <button class="shop__cart-btn">Add to cart</button>
+            </article>
+        {% endfor %}
+    </div>
+    <div class="shop__pages">
+        {% if pg > 1 %}
+            <a href="{{ url_for('shop', pg = 1) }}" class="shop__pages-nav-item previous arrow"><<</a>
+            <a href="{{ url_for('shop', pg = pg - 1) }}" class="shop__pages-nav-item previous arrow"><</a>
+        {% else %}
+            <a href="{{ url_for('shop', pg = 1) }}" class="shop__pages-nav-item previous arrow hidden"><<</a>
+            <a href="{{ url_for('shop', pg = pg - 1) }}" class="shop__pages-nav-item previous arrow hidden"><</a>
+        {% endif %}
+
+        <!-- Show 5 pg options that's -2 and +2 from current page -->
+        {% macro show_pg_num(start, end, page) %}
+            {% for i in range(start, end) %}
+                {% if page == i %}
+                    <a href="{{ url_for('shop', pg = i) }}" class="shop__pages-nav-item pg-num current bold">{{ i }}</a> 
+                {% else %}
+                    <a href="{{ url_for('shop', pg = i) }}" class="shop__pages-nav-item pg-num bold">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+        {% endmacro %}
+
+        {% if total_pg <= 5 %}
+            <!-- Show less than 5 pg options if total_pg <= 5 -->
+            {{ show_pg_num(1, total_pg + 1, pg) }}
+        {% elif total_pg > 5 %}
+            {% if pg <= 3 %}
+                {{ show_pg_num(1, 6, pg) }}             
+            {% elif pg > 3 and pg <= total_pg - 2 %}
+                {{ show_pg_num(pg - 2, pg + 3, pg) }}
+            {% elif pg >= total_pg - 2 %}
+                {{ show_pg_num(total_pg - 4, total_pg + 1, pg) }}
+            {% endif %}
+        {% endif %}
+        
+        {% if pg < total_pg %}
+            <a href="{{ url_for('shop', pg = pg + 1) }}" class="shop__pages-nav-item next arrow">></a>
+            <a href="{{ url_for('shop', pg = total_pg) }}" class="shop__pages-nav-item next arrow">>></a>
+        {% else %}
+            <a href="{{ url_for('shop', pg = pg + 1) }}" class="shop__pages-nav-item next arrow hidden">></a>
+            <a href="{{ url_for('shop', pg = total_pg) }}" class="shop__pages-nav-item next arrow hidden">>></a>
+        {% endif %}
+    </div>
+</main>
+{% endblock %} 
+
+{% block js %}
+<script src="/static/shop.js"></script>
+{% endblock %}

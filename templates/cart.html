@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="cart ctnr">
+    <h1 class="cart__title">
+        Cart
+        {% if cart_items %}
+            <button class="remove-all-btn">Delete All</button>
+        {% endif %}
+    </h1>
+    {% if not cart_items %}
+        <h3 class="none cart__none">No items in cart</h3>
+    {% endif %}
+    {% if matched_msg %}
+        <div class="msg-ctnr">
+            <p class="msg">{{ matched_msg }}</p>
+            <button class="remove-btn close-btn">Close</button>
+        </div>
+    {% endif %}
+    <section class="cart__products">
+        {% if cart_items %}
+            <div class="cart_info">
+                {% for item in cart_items %}
+                    <article class="cart__item">
+                        <img src="{{ item.directory }}{{ item.path }}" class="cart__item-col cart__item-col--left cart__item-img" alt="{{ item.alt }}">
+                        <div class="cart__item-col cart__item-col--mid">
+                            <div class="cart__item-name bold">{{ item.name }}</div>
+                            <button class="remove-btn cart__item-delete-btn">Delete</button>
+                        </div>
+                        <div class="cart__item-col cart__item-col--right">
+                            <div class="cart__item-price bold">{{ item.price }}</div>
+                            <div class="cart__item-qty">
+                                <h3 class="cart__item-qty-title">Qty:</h3>
+                                <select name="qty" class="qty">
+                                    <!-- Cycle through total stock of this ONE item -->
+                                    {% for i in range(0, (current_stocks | length)) %}
+                                        {% set stock_count = current_stocks[i] | int %}
+                                        <!-- Match correct stock_count to current item in loop -->
+                                        {% if i == cart_items.index(item) %}
+                                            <!--Cycle through this stock count -->
+                                            {% for k in range(1, (stock_count | int) + 1) %}
+                                                <!-- int added in case num is treated as str -->
+                                                {% if k == item["stock"] | int %}
+                                                    <option value="{{ k }}" class="desired-qty" selected>{{ k }}</option>
+                                                {% else %}
+                                                    <option value="{{ k }}">{{ k }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% break %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+            <div class="cart__subtotal">
+                <div class="cart__subtotal-text">
+                    <h3 class="cart__subtotal-title">
+                        Subtotal
+                        <span class="cart__total-items">({{ total_items }} items)</span>
+                    </h3>
+                    <h3 class="cart__subtotal-amt">{{ subtotal }}</h3>
+                </div>
+                <input type="submit" class="checkout-btn bold" value="Proceed to checkout">
+            </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %} 
+
+{% block js %}
+<script src="/static/cart.js"></script>
+{% endblock %}
