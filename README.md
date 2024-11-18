@@ -8,7 +8,7 @@ This repo's files was cloned from the [crochet_shop_site](https://github.com/dnc
 ## Original Crochet Shop Website Repo
 [crochet_shop_site](https://github.com/dnce17/crochet_shop_site)
 
-# Website Demo
+## Website Demo
 * GCP: https://crochet-shop-website-1057035447975.us-central1.run.app
 * Azure: https://crochet-shop-website.greentree-09dfd09f.centralus.azurecontainerapps.io/
 * Render: https://crochet-shop-site.onrender.com/
@@ -21,3 +21,32 @@ This repo's files was cloned from the [crochet_shop_site](https://github.com/dnc
     * items can be added to cart
 * Cart page
     * cart items can be deleted and item quantity can be adjusted
+
+## Notes
+The Dockerfile uses the below command since the website is ran using gunicorn
+```python
+CMD ["gunicorn", "-k", "geventwebsocket.gunicorn.workers.GeventWebSocketWorker", "-w", "1", "-b", "0.0.0.0:8000", "app:app"]
+```
+### Issue
+Regarding why `-b` and `0.0.0.0:8000` is needed
+* Issue: When running `gunicorn -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 app:app` (without -b and ip_address:port), the app is not ran on the port specified in...
+```python
+if __name__ == "__main__":
+    socketio.run(app, debug=True, host="0.0.0.0", port="5000")
+```
+### Explanation and Solution
+#### Key Points
+* socketio.run(app, ...): When calling socketio.run(app, ...) inside the if __name__ == "__main__": block, it starts the built-in Flask development server (not Gunicorn) and listens on the specified host and port. In the code above, port=5000 is specified, so the Flask development server would runs on port 5000.
+* Gunicorn: When Gunicorn is run, it completely takes over the web server and does not use the Flask development server. It will start the application on the port specified in Gunicorn's command (e.g., with the -b option) or the default port (which is 8000 if not specified).
+
+#### Why It Runs on Port 8000
+When specifying the port in socketio.run(app, ...) but then running Gunicorn, the Flask development server is never actually used. Gunicorn starts a separate process and ignores any port settings in socketio.run(). If port with Gunicorn is not specified, it will default to port 8000.
+
+In other words:
+
+* socketio.run(app) only applies when running the Flask app directly (i.e., without Gunicorn).
+* Gunicorn overrides the need for socketio.run() and will start the server based on its own configuration.
+
+Using -b and specifying the port like the below allows you to control which port Gunicorn will use
+
+* `-b 0.0.0.0:5000`: This binds Gunicorn to port 5000 and listens on all IP addresses (0.0.0.0), which is typically what you want for Docker containers.
